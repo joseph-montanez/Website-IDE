@@ -1,6 +1,6 @@
-<?php include('app/header.php') ?>
+<?php require 'app/header.php' ?>
 Add a connection!
-<?php include('app/footer.php') ?>
+<?php require 'app/footer.php' ?>
 <!--
 <form target="runner" action="runner.php" method="post">
     <input type="text" name="server" placeholder="Server" /><br />

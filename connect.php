@@ -1,5 +1,6 @@
 <?php
-$ctx = stream_context_create(array( 
+$ctx = stream_context_create(
+    array( 
     'http' => array( 
         'timeout' => 1 
         ) 
