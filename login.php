@@ -2,9 +2,10 @@
 require_once 'library/Gorilla3d/Session.php';
 require_once 'library/Gorilla3d/Template.php';
 require_once 'models/Accounts.php';
+require_once 'models/Sites.php';
 $session = new Gorilla3d_Session();
 
-if($session->get('accountId') !== null) {
+if ($session->get('accountId') !== null) {
     header('Location: app');
     exit;
 }
@@ -14,10 +15,10 @@ $password = isset($_POST['password']) ? $_POST['password'] : '';
 $username = isset($_POST['username']) ? $_POST['username'] : '';
 
 if (!empty($_POST)) {
-    Accounts::setDatabase($db);
     $newAccount = false;
     if (!Accounts::exists()) {
-        Accounts::createTable($db);
+        Accounts::createTable();
+        Sites::createTable();
         $newAccount = true;
     }
     $account  = false;

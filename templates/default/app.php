@@ -1,5 +1,7 @@
 <?php require 'app/header.php' ?>
-Add a connection!
+<?php if ($success === 'connection') { ?>
+    Your connection has been added!
+<?php } ?>
 <?php require 'app/footer.php' ?>
 <!--
 <form target="runner" action="runner.php" method="post">

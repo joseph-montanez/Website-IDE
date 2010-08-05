@@ -1,0 +1,3 @@
+<?php require 'header.php'  ?>
+Connecting to <?php echo $site->host ?>...
+<?php require 'footer.php' ?>

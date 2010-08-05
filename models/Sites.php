@@ -1,7 +1,7 @@
 <?php
-class Connections
+class Sites
 {
-    public static $tableName = 'connections';
+    public static $tableName = 'sites';
     public $id;
     public $accountId;
     public $username;
@@ -96,7 +96,7 @@ class Connections
         $stmt->execute(array(
             ':id' => $id
         ));
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Connections');
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Sites');
         $row = $stmt->fetch(PDO::FETCH_CLASS);
         return $row;
     }
@@ -109,11 +109,11 @@ class Connections
         $sql = 'SELECT * FROM ' . self::$tableName;
         $stmt = $db->prepare($sql);
         $stmt->execute();
-        $rows = $stmt->fetchAll(PDO::FETCH_CLASS, 'Connections');
+        $rows = $stmt->fetchAll(PDO::FETCH_CLASS, 'Sites');
         return (array) $rows;
     }
     
-    public static function insert(Connections $connection, $db = null) 
+    public static function insert(Sites $site, $db = null) 
     {
         global $db;
         self::isTable();
@@ -124,11 +124,11 @@ class Connections
         );
         $stmt->execute(
             array(
-                ':host' => $connection->host,
-                ':port' => $connection->port,
-                ':username' => $connection->username,
-                ':passwd' => $connection->passwd,
-                ':accountId' => $connection->accountId
+                ':host' => $site->host,
+                ':port' => $site->port,
+                ':username' => $site->username,
+                ':passwd' => $site->passwd,
+                ':accountId' => $site->accountId
             )
         );
     }

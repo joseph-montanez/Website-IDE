@@ -1,13 +1,30 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 ignore_user_abort(true);
 
 require_once 'library/Gorilla3d/Ssh.php';
 require_once 'library/Gorilla3d/Ssh/Inode.php';
+require_once 'library/Gorilla3d/Session.php';
+require_once 'library/Gorilla3d/Template.php';
+require_once 'models/Sites.php';
+$session = new Gorilla3d_Session();
 
-$ssh = new Gorilla3d_Ssh($_REQUEST['server'], $_REQUEST['username'], $_REQUEST['password']);
-file_put_contents('data/log.txt', "\n" . 'started: ' . date('F j, Y H:i:s a'), FILE_APPEND);
+if ($session->get('accountId') === null) {
+    header('Location: ../login');
+    exit;
+}
+
+$site = Sites::byId($_REQUEST['id']);
+
+if ($site === null) {
+    
+}
+
+$ssh = new Gorilla3d_Ssh(
+    $site->host, $site->username, $site->passwd
+);
+file_put_contents(
+    'data/log.txt', "\n" . 'started: ' . date('F j, Y H:i:s a'), FILE_APPEND
+);
 echo '
     Connected...
     <script type="text/javascript">

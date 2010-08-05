@@ -1,7 +1,7 @@
-<?php require 'header.php'  ?>
+<?php require 'templates/default/app/header.php'  ?>
 <form action="" method="post">
     <fieldset>
-        <legend>New Connection</legend>
+        <legend>New Site</legend>
         <label for="server">
             Host:
         </label>
@@ -23,11 +23,11 @@
         <br />
         
         <?php if ($success) { ?>
-            <input type="submit" name="saveConnection" value="Save Connection" />
+            <input type="submit" name="saveConnection" value="Save Site" />
         <?php } else { ?>
             <input type="submit" value="Test Connection" />
             <?php echo $error ?>
         <?php } ?>
     </fieldset>
 </form>
-<?php require 'footer.php' ?>
+<?php require 'templates/default/app/footer.php'  ?>

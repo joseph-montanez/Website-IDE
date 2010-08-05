@@ -12,20 +12,28 @@ class Gorilla3d_Ssh
         // Check for valid host
         $validHost = @fsockopen($host, $port, $errno, $errstr, $timeout = 2);
         
-        if($validHost) {
+        if ($validHost) {
             fclose($validHost); 
             $this->connection = ssh2_connect($host, $port);
         }
-        if($this->connection) {
-            $this->connected = @ssh2_auth_password($this->connection, $username, $password);
+        if ($this->connection) {
+            $this->connected = @ssh2_auth_password(
+                $this->connection, $username, $password
+            );
         }
     }
     
-    public function isConnected() {
+    /**
+     *
+     * @return bool
+     */
+    public function isConnected() 
+    {
         return $this->connected;
     }
     
-    public function command($cmd) {
+    public function command($cmd) 
+    {
         $stream = ssh2_exec($this->connection, $cmd);
         stream_set_blocking($stream, true);
         $data = stream_get_contents($stream);
@@ -33,7 +41,13 @@ class Gorilla3d_Ssh
         return $data;
     }
     
-    public function scandir($path) {
+    /**
+     *
+     * @param $path The remote path to scan
+     * @return array
+     */
+    public function scandir($path) 
+    {
         $stream = ssh2_exec($this->connection, 'ls -l ' . escapeshellcmd($path));
         stream_set_blocking($stream, true);
         $data = stream_get_contents($stream);
@@ -45,10 +59,15 @@ class Gorilla3d_Ssh
             $parts = explode(' ', $line);
             $file  = new Gorilla3d_Ssh_Inode();
             $file->filename = $parts[count($parts) - 1];
-            $file->type = strstr('d', $parts[0]) ? Gorilla3d_Ssh_Inode::$DIRECTORY : Gorilla3d_Ssh_Inode::$FILE;
-            $file->modDate  = $parts[count($parts) - 3] . ' ' . $parts[count($parts) - 2];
+            $file->type = strstr('d', $parts[0]) ? 
+                Gorilla3d_Ssh_Inode::$DIRECTORY : 
+                Gorilla3d_Ssh_Inode::$FILE;
+            $file->modDate  = $parts[count($parts) - 3] 
+                . ' ' . $parts[count($parts) - 2];
             $files []= $file;
         }
+        
+        return $files;
     }
 }
 ?>

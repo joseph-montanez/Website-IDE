@@ -41,10 +41,17 @@ html {
     <h2></h2>
     <ul>
         <li>
-            <a href="<?php echo $_SERVER['SCRIPT_NAME'] ?>/app/connection-edit">
+            <a href="<?php echo $_SERVER['SCRIPT_NAME'] ?>/app/sites/edit">
                 Add FTP/SFTP
             </a>
         </li>
+        <?php foreach (Sites::fetchAll() as $conn) { ?>
+            <li>
+                <a href="<?php echo $_SERVER['SCRIPT_NAME'] ?>/app/connection?id=<?php echo $conn->id ?>">
+                    <?php echo $conn->host ?>
+                </a>
+            </li>
+        <?php } ?>
         <li><a href="<?php echo $_SERVER['SCRIPT_NAME'] ?>/logout">Logout</a></li>
     </ul>
 </div></div>

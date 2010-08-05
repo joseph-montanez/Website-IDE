@@ -1,16 +1,14 @@
 <?php
-class Accounts 
+class Accounts
 {
     public static $tableName = 'accounts';
     public $id;
     public $username;
     public $passwd;
-    public static $db;
     public static $crypt;
     
-    public function __construct($db = null) 
+    public function __construct() 
     {
-        self::setDatabase($db);
     }
     
     public function setPasswd($passwd) 
@@ -25,17 +23,11 @@ class Accounts
         return $this;
     }
     
-    public static function setDatabase($db = null) 
-    {
-        if($db !== null) {
-            self::$db = $db;
-        }
-    }
-    
     public static function exists() 
     {
+        global $db;
         $sql = 'SELECT name FROM sqlite_master WHERE name = :name';
-        $stmt = self::$db->prepare($sql);
+        $stmt = $db->prepare($sql);
         $stmt->bindParam(
             ':name', 
             self::$tableName, 
@@ -52,7 +44,7 @@ class Accounts
     
     public static function createTable($db = null) 
     {
-        self::setDatabase($db);
+        global $db;
         $sql = '
             CREATE TABLE IF NOT EXISTS ' . self::$tableName . ' (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -62,13 +54,14 @@ class Accounts
                 lastLoginDate INTEGER NULL
             );
         ';
-        return self::$db->exec($sql);
+        return $db->exec($sql);
     }
     
     public static function byId($id) 
     {
+        global $db;
         $sql = 'SELECT * FROM ' . self::$tableName . ' WHERE id = ?';
-        $stmt = self::$db->query($sql);
+        $stmt = $db->query($sql);
         $account = false;
         foreach ($dbh->query($sql) as $row) {
             $account = $stmt->fetchALL(PDO::FETCH_CLASS, get_class(self));
@@ -78,27 +71,30 @@ class Accounts
     
     public static function byLogin($username, $password) 
     {  
+        global $db;
         $password = self::encodePassword($password);
         $sql = 'SELECT * FROM ' . self::$tableName 
             . ' WHERE username = :username AND passwd = :passwd';
-        $stmt = self::$db->prepare($sql);
+        $stmt = $db->prepare($sql);
         $stmt->execute(
             array(
                 ':username' => $username,
                 ':passwd' => $password,
             )
         );
-        $stmt->setFetchMode( PDO::FETCH_CLASS, 'Accounts');
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Accounts');
         $account = $stmt->fetch(PDO::FETCH_CLASS);
         $stmt->closeCursor();
         return $account;
     }
     
-    public static function insert(accounts $account, $db = null) 
+    public static function insert(accounts $account) 
     {
-        self::setDatabase($db);
-        $stmt = self::$db->prepare('INSERT INTO ' . self::$tableName 
-            . ' (username, passwd) VALUES(:username, :passwd)');
+        global $db;
+        $stmt = $db->prepare(
+            'INSERT INTO ' . self::$tableName 
+            . ' (username, passwd) VALUES(:username, :passwd)'
+        );
         $stmt->bindParam(':username', $account->username, PDO::PARAM_STR);
         $stmt->bindParam(':passwd', $account->passwd, PDO::PARAM_STR);
         $stmt->execute();
